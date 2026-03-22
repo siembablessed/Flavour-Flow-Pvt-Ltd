@@ -24,7 +24,7 @@ const Navbar = ({ onNavigate, onCartOpen }: NavbarProps) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <button onClick={() => onNavigate("hero")} className="flex items-center gap-2.5 active:scale-[0.97]">
-            <img src={logo} alt="Flavour Flow" className="h-10 w-auto" />
+            <img src={logo} alt="Flavour Flow" className="h-10 sm:h-12 w-auto scale-[1.35] origin-left ml-2" />
           </button>
 
           <div className="hidden md:flex items-center gap-1">
@@ -32,7 +32,7 @@ const Navbar = ({ onNavigate, onCartOpen }: NavbarProps) => {
               <button
                 key={l.section}
                 onClick={() => onNavigate(l.section)}
-                className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground rounded-lg hover:bg-muted transition-colors duration-200"
+                className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-accent rounded-lg hover:bg-accent/10 transition-colors duration-200"
               >
                 {l.label}
               </button>
@@ -68,7 +68,7 @@ const Navbar = ({ onNavigate, onCartOpen }: NavbarProps) => {
               <button
                 key={l.section}
                 onClick={() => { onNavigate(l.section); setMobileOpen(false); }}
-                className="block w-full text-left py-3 px-3 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                className="block w-full text-left py-3 px-3 text-sm font-medium text-foreground/70 hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
               >
                 {l.label}
               </button>

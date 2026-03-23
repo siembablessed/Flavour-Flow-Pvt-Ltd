@@ -46,7 +46,7 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
         <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
           {/* Logo */}
           <button onClick={clearSearchAndHome} className="flex-shrink-0 flex items-center group">
-            <img src={logo} alt="Flavour Flow" className="h-10 sm:h-12 w-auto scale-[1.35] origin-left ml-2 transition-transform group-hover:scale-[1.4]" />
+            <img src={logo} alt="Flavour Flow" className="h-12 sm:h-16 w-auto scale-[1.5] origin-left ml-2 transition-transform group-hover:scale-[1.55]" />
           </button>
 
           {/* Centered Search Bar (Desktop) */}

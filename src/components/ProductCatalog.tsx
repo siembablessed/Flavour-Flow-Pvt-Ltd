@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Plus, SlidersHorizontal } from "lucide-react";
 import { products, categories, Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 
-const ProductCatalog = () => {
+interface ProductCatalogProps {
+  searchQuery: string;
+}
+
+const ProductCatalog = ({ searchQuery }: ProductCatalogProps) => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [search, setSearch] = useState("");
   const { addItem } = useCart();
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -22,7 +25,7 @@ const ProductCatalog = () => {
 
   const filtered = products.filter((p) => {
     const matchCat = activeCategory === "All" || p.category === activeCategory;
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchSearch;
   });
 
@@ -35,25 +38,13 @@ const ProductCatalog = () => {
     <section id="products" ref={sectionRef} className="py-20 px-4 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <div className={`mb-10 transition-all duration-700 ${visible ? "animate-fade-up" : "opacity-0"}`}>
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-1">
-                Product Catalogue
-              </h2>
-              <p className="text-foreground/50 text-sm">
-                Wholesale case prices in USD · VAT-inclusive unit pricing shown
-              </p>
-            </div>
-            <div className="relative w-full md:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
-              />
-            </div>
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-foreground mb-1">
+              Product Catalogue
+            </h2>
+            <p className="text-foreground/50 text-sm">
+              Wholesale case prices in USD · VAT-inclusive unit pricing shown
+            </p>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">

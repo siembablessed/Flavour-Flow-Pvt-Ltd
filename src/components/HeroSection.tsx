@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight, Package, Truck, Shield, ChevronLeft, ChevronRight } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import { QuoteDialog } from "@/components/QuoteDialog";
 
 interface HeroSectionProps {
   onNavigate: (section: string) => void;
@@ -39,6 +40,7 @@ const slides = [
 const HeroSection = ({ onNavigate }: HeroSectionProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [quoteOpen, setQuoteOpen] = useState(false);
   const isAnimating = useRef(false);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ const HeroSection = ({ onNavigate }: HeroSectionProps) => {
     <section 
       id="hero" 
       ref={ref} 
-      className="relative w-full h-[calc(100vh-64px)] min-h-[500px] flex items-center justify-start overflow-hidden mt-[64px] bg-black group"
+      className="relative w-full h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] min-h-[500px] flex items-center justify-start overflow-hidden mt-[64px] sm:mt-[80px] bg-black group"
     >
       {/* Background Images - mapping all to allow crossfade */}
       {slides.map((s, index) => (
@@ -123,7 +125,7 @@ const HeroSection = ({ onNavigate }: HeroSectionProps) => {
       </button>
 
       {/* Main Content Area */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 w-full -translate-y-4 lg:-translate-y-8">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 w-full pb-8 sm:pb-0">
         <div key={slide.id} className="max-w-2xl animate-fade-up md:ml-16 lg:ml-20">
           <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-extrabold leading-[1.05] text-white mb-4 tracking-tight text-balance drop-shadow-lg">
             {slide.title}<br />
@@ -145,7 +147,7 @@ const HeroSection = ({ onNavigate }: HeroSectionProps) => {
               <ArrowRight className="w-5 h-5" />
             </button>
             <button
-              onClick={() => onNavigate("transport")}
+              onClick={() => setQuoteOpen(true)}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-black font-bold text-lg hover:bg-gray-100 transition-all active:scale-[0.98]"
             >
               Get Delivery Quote
@@ -182,6 +184,9 @@ const HeroSection = ({ onNavigate }: HeroSectionProps) => {
           />
         ))}
       </div>
+
+      {/* Render Quote Dialog outside of the animated slide container */}
+      <QuoteDialog open={quoteOpen} onOpenChange={setQuoteOpen} />
     </section>
   );
 };

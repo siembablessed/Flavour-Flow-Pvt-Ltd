@@ -10,17 +10,33 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const scrollTo = useCallback((section: string) => {
     document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+    if (query.trim() !== "") {
+      const section = document.getElementById("products");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, []);
+
   return (
     <CartProvider>
       <div className="min-h-screen bg-background">
-        <Navbar onNavigate={scrollTo} onCartOpen={() => setCartOpen(true)} />
+        <Navbar 
+          onNavigate={scrollTo} 
+          onCartOpen={() => setCartOpen(true)} 
+          searchQuery={searchQuery}
+          onSearch={handleSearch}
+        />
         <HeroSection onNavigate={scrollTo} />
-        <ProductCatalog />
+        <ProductCatalog searchQuery={searchQuery} />
         <TransportQuote />
         <ContactSection />
         <Footer />

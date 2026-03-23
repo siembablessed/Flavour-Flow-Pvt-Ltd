@@ -1,11 +1,22 @@
 import { useState, useRef, useEffect } from "react";
 import { Truck, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { MapSelector } from "./MapSelector";
 
-const cities = ["Harare", "Bulawayo", "Mutare", "Gweru", "Kwekwe", "Masvingo", "Vic Falls", "Chinhoyi", "Marondera", "Kadoma"];
+interface LocationData {
+  name: string;
+  lat: number;
+  lng: number;
+}
 
 const TransportQuote = () => {
-  const [form, setForm] = useState({ from: "", to: "", cases: "", name: "", phone: "" });
+  const [form, setForm] = useState<{
+    from: LocationData | null;
+    to: LocationData | null;
+    cases: string;
+    name: string;
+    phone: string;
+  }>({ from: null, to: null, cases: "", name: "", phone: "" });
   const [quote, setQuote] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -19,12 +30,25 @@ const TransportQuote = () => {
   const handleQuote = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.from || !form.to || !form.cases) {
-      toast.error("Please fill in all required fields");
+      toast.error("Please pick locations on the map and fill all required fields");
       return;
     }
-    const baseCost = 15 + Math.random() * 35;
-    const caseFactor = parseInt(form.cases) * 0.5;
-    setQuote(Math.round((baseCost + caseFactor) * 100) / 100);
+    
+    // Haversine distance
+    const R = 6371; // Radius of the earth in km
+    const dLat = (form.to.lat - form.from.lat) * Math.PI / 180;
+    const dLon = (form.to.lng - form.from.lng) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(form.from.lat * Math.PI / 180) * Math.cos(form.to.lat * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const distanceKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    const distanceCost = distanceKm * 0.45; // $0.45 per km
+    const caseFactor = parseInt(form.cases) * 0.15; // $0.15 handling per case
+    const total = Math.max(15, distanceCost + caseFactor); // Min $15 delivery
+    
+    setQuote(Math.round(total * 100) / 100);
     toast.success("Quotation ready!");
   };
 
@@ -56,20 +80,20 @@ const TransportQuote = () => {
           {/* Right form */}
           <form onSubmit={handleQuote} className="lg:col-span-3 bg-card border border-border rounded-2xl p-6 lg:p-8 space-y-4 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-medium text-foreground/50 mb-1.5 block">Pickup City *</label>
-                <select value={form.from} onChange={(e) => setForm({ ...form, from: e.target.value })} className={inputClass}>
-                  <option value="">Select</option>
-                  {cities.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-foreground/50 mb-1.5 block">Delivery City *</label>
-                <select value={form.to} onChange={(e) => setForm({ ...form, to: e.target.value })} className={inputClass}>
-                  <option value="">Select</option>
-                  {cities.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
+              <MapSelector 
+                label="Pickup Location" 
+                value={form.from?.name || ""} 
+                placeholder="Search pickup..."
+                onSelect={(name, lat, lng) => setForm(f => ({ ...f, from: { name, lat, lng } }))} 
+                className="bg-muted/50 border-input"
+              />
+              <MapSelector 
+                label="Delivery Location" 
+                value={form.to?.name || ""} 
+                placeholder="Search delivery..."
+                onSelect={(name, lat, lng) => setForm(f => ({ ...f, to: { name, lat, lng } }))} 
+                className="bg-muted/50 border-input"
+              />
             </div>
             <div>
               <label className="text-xs font-medium text-foreground/50 mb-1.5 block">Number of Cases *</label>
@@ -93,8 +117,8 @@ const TransportQuote = () => {
               <div className="bg-accent/5 border border-accent/15 rounded-xl p-5 text-center animate-fade-up">
                 <p className="text-xs text-foreground/40 mb-1">Estimated Cost</p>
                 <p className="text-3xl font-bold text-accent tabular-nums">${quote.toFixed(2)}</p>
-                <p className="text-xs text-foreground/40 mt-1.5">
-                  {form.from} → {form.to} · {form.cases} cases
+                <p className="text-xs text-foreground/40 mt-1.5 truncate px-2">
+                  {form.from?.name.split(',')[0]} → {form.to?.name.split(',')[0]} · {form.cases} cases
                 </p>
                 <p className="text-[10px] text-foreground/30 mt-2">Estimate only. Final price may vary.</p>
               </div>

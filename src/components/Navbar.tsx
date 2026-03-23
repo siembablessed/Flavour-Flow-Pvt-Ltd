@@ -73,7 +73,7 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
                 <button
                   key={l.section}
                   onClick={() => onNavigate(l.section)}
-                  className="px-3 py-2 text-sm font-semibold text-gray-600 hover:text-black transition-colors"
+                  className="px-3 py-2 text-sm font-semibold text-gray-600 hover:text-accent transition-colors"
                 >
                   {l.label}
                 </button>
@@ -141,7 +141,7 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
               <button
                 key={l.section}
                 onClick={() => { onNavigate(l.section); setMobileOpen(false); }}
-                className="block w-full text-left py-3 px-4 text-sm font-semibold text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-colors"
+                className="block w-full text-left py-3 px-4 text-sm font-semibold text-gray-700 hover:text-accent hover:bg-gray-50 rounded-xl transition-colors"
               >
                 {l.label}
               </button>

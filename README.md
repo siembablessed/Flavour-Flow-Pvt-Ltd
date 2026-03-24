@@ -1,3 +1,3 @@
-# Flavour Flow Wholesale Connect
+# Welcome to your Lovable project
 
-Frontend for Flavour Flow's wholesale ordering experience, including product browsing, transport quotes, and contact flows.
+TODO: Document your project here

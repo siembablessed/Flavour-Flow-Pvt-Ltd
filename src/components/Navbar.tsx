@@ -45,8 +45,8 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
           {/* Logo */}
-          <button onClick={clearSearchAndHome} className="flex-shrink-0 flex items-center group">
-            <img src={logo} alt="Flavour Flow" className="h-12 sm:h-16 w-auto scale-[1.5] origin-left ml-2 transition-transform group-hover:scale-[1.55]" />
+          <button onClick={clearSearchAndHome} className="flex-shrink-0 flex items-center -ml-2 group">
+            <img src={logo} alt="Flavour Flow" className="h-20 sm:h-24 w-auto" />
           </button>
 
           {/* Centered Search Bar (Desktop) */}
@@ -73,7 +73,10 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
                 <button
                   key={l.section}
                   onClick={() => onNavigate(l.section)}
-                  className="px-3 py-2 text-sm font-semibold text-gray-600 hover:text-accent transition-colors"
+                  className="px-3 py-2 text-sm font-semibold transition-colors"
+                  style={{ color: '#1B3674' }}
+                  onMouseOver={(e) => e.currentTarget.style.color = '#F59714'}
+                  onMouseOut={(e) => e.currentTarget.style.color = '#1B3674'}
                 >
                   {l.label}
                 </button>
@@ -85,8 +88,10 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
                 onClick={onCartOpen}
                 className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
                 aria-label="Open cart"
+                onMouseOver={(e) => { const svg = e.currentTarget.querySelector('svg'); if (svg) svg.style.color = '#F59714'; }}
+                onMouseOut={(e) => { const svg = e.currentTarget.querySelector('svg'); if (svg) svg.style.color = '#1B3674'; }}
               >
-                <ShoppingCart className="w-6 h-6 text-gray-800" />
+                <ShoppingCart className="w-6 h-6" style={{ color: '#1B3674' }} />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-white text-[11px] flex items-center justify-center font-bold">
                     {totalItems}
@@ -105,7 +110,8 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
               ) : (
                 <button 
                   onClick={() => setAuthOpen(true)}
-                  className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#00c2a8] text-white font-bold text-sm hover:bg-[#00a892] focus:ring-4 focus:ring-[#00c2a8]/30 transition-all active:scale-95 whitespace-nowrap"
+                  className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full font-bold text-sm focus:ring-4 transition-all active:scale-95 whitespace-nowrap"
+                  style={{ backgroundColor: '#1B3674', color: 'white' }}
                 >
                   Sign in / Join
                 </button>
@@ -141,7 +147,10 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
               <button
                 key={l.section}
                 onClick={() => { onNavigate(l.section); setMobileOpen(false); }}
-                className="block w-full text-left py-3 px-4 text-sm font-semibold text-gray-700 hover:text-accent hover:bg-gray-50 rounded-xl transition-colors"
+                className="block w-full text-left py-3 px-4 text-sm font-semibold hover:bg-gray-50 rounded-xl transition-colors"
+                style={{ color: '#1B3674' }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#F59714'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#1B3674'}
               >
                 {l.label}
               </button>
@@ -156,7 +165,7 @@ const Navbar = ({ onNavigate, onCartOpen, searchQuery, onSearch }: NavbarProps) 
                 </div>
               </div>
             ) : (
-              <button onClick={() => { setAuthOpen(true); setMobileOpen(false); }} className="w-full mt-2 inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#00c2a8] text-white font-bold text-sm hover:bg-[#00a892] transition-colors">
+              <button onClick={() => { setAuthOpen(true); setMobileOpen(false); }} className="w-full mt-2 inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm transition-colors" style={{ backgroundColor: '#1B3674', color: 'white' }}>
                 Sign in / Join
               </button>
             )}

@@ -11,12 +11,11 @@ interface LocationData {
 
 const TransportQuote = () => {
   const [form, setForm] = useState<{
-    from: LocationData | null;
     to: LocationData | null;
     cases: string;
     name: string;
     phone: string;
-  }>({ from: null, to: null, cases: "", name: "", phone: "" });
+  }>({ to: null, cases: "", name: "", phone: "" });
   const [quote, setQuote] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -29,18 +28,22 @@ const TransportQuote = () => {
 
   const handleQuote = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.from || !form.to || !form.cases) {
-      toast.error("Please pick locations on the map and fill all required fields");
+    if (!form.to || !form.cases) {
+      toast.error("Please select a delivery location and fill all required fields");
       return;
     }
     
+    // Fixed pickup location - warehouse in Harare
+    const fromLat = -17.8252; // Harare coordinates
+    const fromLng = 31.0335;
+    
     // Haversine distance
     const R = 6371; // Radius of the earth in km
-    const dLat = (form.to.lat - form.from.lat) * Math.PI / 180;
-    const dLon = (form.to.lng - form.from.lng) * Math.PI / 180;
+    const dLat = (form.to.lat - fromLat) * Math.PI / 180;
+    const dLon = (form.to.lng - fromLng) * Math.PI / 180;
     const a = 
       Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(form.from.lat * Math.PI / 180) * Math.cos(form.to.lat * Math.PI / 180) * 
+      Math.cos(fromLat * Math.PI / 180) * Math.cos(form.to.lat * Math.PI / 180) * 
       Math.sin(dLon/2) * Math.sin(dLon/2);
     const distanceKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
@@ -63,7 +66,7 @@ const TransportQuote = () => {
             <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-5">
               <Truck className="w-6 h-6 text-accent" />
             </div>
-            <h2 className="text-3xl font-bold text-foreground mb-3">Delivery Estimate</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-3">Choose Delivery Location</h2>
             <p className="text-foreground/50 text-sm leading-relaxed mb-6">
               Get an instant transport quote for your order. We deliver to all major cities and towns across Zimbabwe.
             </p>
@@ -81,16 +84,9 @@ const TransportQuote = () => {
           <form onSubmit={handleQuote} className="lg:col-span-3 bg-card border border-border rounded-2xl p-6 lg:p-8 space-y-4 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <MapSelector 
-                label="Pickup Location" 
-                value={form.from?.name || ""} 
-                placeholder="Search pickup..."
-                onSelect={(name, lat, lng) => setForm(f => ({ ...f, from: { name, lat, lng } }))} 
-                className="bg-muted/50 border-input"
-              />
-              <MapSelector 
                 label="Delivery Location" 
                 value={form.to?.name || ""} 
-                placeholder="Search delivery..."
+                placeholder="Search delivery location..."
                 onSelect={(name, lat, lng) => setForm(f => ({ ...f, to: { name, lat, lng } }))} 
                 className="bg-muted/50 border-input"
               />
@@ -118,7 +114,7 @@ const TransportQuote = () => {
                 <p className="text-xs text-foreground/40 mb-1">Estimated Cost</p>
                 <p className="text-3xl font-bold text-accent tabular-nums">${quote.toFixed(2)}</p>
                 <p className="text-xs text-foreground/40 mt-1.5 truncate px-2">
-                  {form.from?.name.split(',')[0]} → {form.to?.name.split(',')[0]} · {form.cases} cases
+                  Harare Warehouse → {form.to?.name.split(',')[0]} · {form.cases} cases
                 </p>
                 <p className="text-[10px] text-foreground/30 mt-2">Estimate only. Final price may vary.</p>
               </div>

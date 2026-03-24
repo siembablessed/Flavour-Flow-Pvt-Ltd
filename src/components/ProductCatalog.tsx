@@ -56,8 +56,9 @@ const ProductCatalog = ({ searchQuery }: ProductCatalogProps) => {
                 className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-200 active:scale-95 ${
                   activeCategory === cat
                     ? "bg-accent text-white shadow-sm"
-                    : "bg-card text-foreground/50 hover:text-foreground border border-border"
+                    : "bg-card border border-border hover:border-primary/30"
                 }`}
+                style={activeCategory !== cat ? { color: '#1B3674' } : undefined}
               >
                 {cat}
               </button>

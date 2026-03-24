@@ -16,25 +16,10 @@ const Index = () => {
     document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  const handleSearch = useCallback((query: string) => {
-    setSearchQuery(query);
-    if (query.trim() !== "") {
-      const section = document.getElementById("products");
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, []);
-
   return (
     <CartProvider>
       <div className="min-h-screen bg-background">
-        <Navbar 
-          onNavigate={scrollTo} 
-          onCartOpen={() => setCartOpen(true)} 
-          searchQuery={searchQuery}
-          onSearch={handleSearch}
-        />
+        <Navbar onNavigate={scrollTo} onCartOpen={() => setCartOpen(true)} searchQuery={searchQuery} onSearch={setSearchQuery} />
         <HeroSection onNavigate={scrollTo} />
         <ProductCatalog searchQuery={searchQuery} />
         <TransportQuote />
